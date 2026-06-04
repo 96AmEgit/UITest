@@ -23,6 +23,14 @@ public class DeliveryUIList : MonoBehaviour
     /// <summary>
     /// リストを再描画
     /// </summary>
+    void Start()
+{
+    // もしインスペクターで未設定（Null）だったら、同じオブジェクトから自動で取得する
+    if (requestManager == null)
+    {
+        requestManager = GetComponent<RequestManager>();
+    }
+}
     public void RefreshList()
     {
         // 既存子を削除
@@ -108,7 +116,5 @@ public class DeliveryUIList : MonoBehaviour
         }
     }
 }
-NullReferenceException: Object reference not set to an instance of an object
-DeliveryUIList.RefreshList () (at Assets/script/DeliveryUIList.cs:49)
-RequestManager.Update () (at Assets/script/RequestManager.cs:23)
+
 
