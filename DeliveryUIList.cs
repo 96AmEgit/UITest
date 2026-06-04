@@ -23,14 +23,6 @@ public class DeliveryUIList : MonoBehaviour
     /// <summary>
     /// リストを再描画
     /// </summary>
-    void Start()
-{
-    // もしインスペクターで未設定（Null）だったら、同じオブジェクトから自動で取得する
-    if (requestManager == null)
-    {
-        requestManager = GetComponent<RequestManager>();
-    }
-}
     public void RefreshList()
     {
         // 既存子を削除
@@ -70,7 +62,17 @@ public class DeliveryUIList : MonoBehaviour
         // 現在の数を記憶しておく（次回の比較用）
         lastActiveCount = currentRequests.Count;
 
-        // レイアウト再計算（ZigZagLayoutGroup用）
+        // 【元の調整機能】レイアウト再計算
+        TriggerLayoutUpdate();
+    }
+
+    /// <summary>
+    /// レイアウトグループ（ZigZagLayoutGroup）の配置を強制的に再計算させる補助関数
+    /// </summary>
+    private void TriggerLayoutUpdate()
+    {
+        if (contentParent == null) return;
+        
         var layout = contentParent.GetComponent<ZigZagLayoutGroup>();
         if (layout != null)
         {
@@ -84,7 +86,7 @@ public class DeliveryUIList : MonoBehaviour
     /// </summary>
     private IEnumerator SlideInRoutine(RectTransform targetRect)
     {
-        // 1フレーム待って、レイアウトグループ（ZigZagLayoutGroup）による本来の配置座標が確定するのを待つ
+        // 1フレーム待って、レイアウトグループによる本来の配置座標が確定するのを待つ
         yield return null;
 
         if (targetRect == null) yield break;
@@ -97,7 +99,7 @@ public class DeliveryUIList : MonoBehaviour
         float time = 0f;
         while (time < slideDuration)
         {
-            if (targetRect == null) yield break; // 移動中にシーン遷移などで削除された場合の安全対策
+            if (targetRect == null) yield break; // 移動中に削除された場合の安全対策
 
             time += Time.deltaTime;
             float t = time / slideDuration;
@@ -114,7 +116,8 @@ public class DeliveryUIList : MonoBehaviour
         {
             targetRect.anchoredPosition = targetPosition; // 最後にきっちりゴールに合わせる
         }
+
+        // 【新規追加】アニメーションが「完了した直後」に、もう一度元の位置調整機能を実行する
+        TriggerLayoutUpdate();
     }
 }
-
-
