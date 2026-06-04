@@ -108,3 +108,7 @@ public class DeliveryUIList : MonoBehaviour
         }
     }
 }
+NullReferenceException: Object reference not set to an instance of an object
+DeliveryUIList.RefreshList () (at Assets/script/DeliveryUIList.cs:49)
+RequestManager.Update () (at Assets/script/RequestManager.cs:23)
+
